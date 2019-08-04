@@ -1,0 +1,86 @@
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { MovieComponentComponent } from './movie-component/movie-component.component';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+@NgModule({
+  declarations: [
+    AppComponent,
+    MovieComponentComponent
+  ],
+  imports: [
+    FormsModule,
+    HttpClientModule,
+    BrowserModule,
+    AppRoutingModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+
+
+
+
+
+
+
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+@Component({
+  selector: 'app-movie-component',
+  templateUrl: './movie-component.component.html',
+  styleUrls: ['./movie-component.component.css']
+})
+export class MovieComponentComponent implements OnInit {
+  title="movie";
+  readonly APP_URL = 'http://localhost:8010';
+  myresponse: any =[];
+  isTrue:boolean=false;
+  myname:string;
+
+  constructor(private http:HttpClient) { }
+
+
+  call(){
+    this.myname=this.myname;
+    this.isTrue=true;
+    this.http.get(this.APP_URL + '/catalog' + this.myname).subscribe(
+      data => {
+        this.myresponse= data;
+        console.log(this.myresponse)
+      },
+      error => {
+        console.log('Error occured', error);
+      }
+    )
+  }
+  ngOnInit() {
+  }
+
+}
+
+
+
+<div id="fetchbtn">
+  
+  <input type="text" name="firstname" [(ngModel)]="myname">
+  <button type="submit" class="btn btn-outline-success" (click)="call()">clickMe</button>
+</div>
+
+<table *ngIf="isTrue">
+  <tbody>
+    <tr *ngFor="let response of myresponse | keyvalue">
+      <li *ngFor="let names of response.value"><p><b<>MovieId</b></p>{{names.movie.movieId}}&nbsp;&nbsp;&nbsp;&nbsp;
+        <p><b<>ReleaseYear</b></p>{{names.movie.releaseYear}}
+        <p><b<>MovieTitle</b></p>{{names.movie.movieTitle}}
+        <p><b<>Moviecasts</b></p>{{names.movie.casts}}
+        <p><b<>Movie Rating</b></p>{{names.movie.rating}}
+      </li>
+    </tr>
+  </tbody>
+</table>
